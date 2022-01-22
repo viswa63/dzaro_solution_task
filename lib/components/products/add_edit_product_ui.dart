@@ -1,6 +1,4 @@
-import 'dart:html';
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import '/components/dashboard/helper_widgets/product_rating.dart';
 import '/util/constants/string_constants.dart';
@@ -8,7 +6,6 @@ import '/util/service/common_service.dart';
 import '/util/ui/atl_button.dart';
 import '../../util/ui/atl_date_time.dart';
 import '/components/dashboard/dashboard_modal.dart';
-import '/util/constants/route_constants.dart';
 import 'add_edit_product_service.dart';
 import '/util/ui/atl_text.dart';
 
@@ -35,7 +32,7 @@ class _AddEditProductUIState extends State<AddEditProductUI> {
         appBar: AppBar(
           title: ATLText(txt: _service.modal.appBarTitle ?? StringConstants.addProductTitle),
         ),
-        body: Padding(padding: const EdgeInsets.all(5.0), child: (addEditProduct())),
+        body: SingleChildScrollView(child: Padding(padding: const EdgeInsets.all(5.0), child: (addEditProduct()))),
       ),
     );
   }
