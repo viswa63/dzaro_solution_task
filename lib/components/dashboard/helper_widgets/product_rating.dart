@@ -13,7 +13,7 @@ class ProductRating extends StatelessWidget {
     if (index >= rating) {
       icon = Icon(
         Icons.star_border,
-        color: Theme.of(context).buttonColor,
+        color: Theme.of(context).primaryColor.withOpacity(0.3),
       );
     } else if (index > rating - 1 && index < rating) {
       icon = Icon(
@@ -26,9 +26,10 @@ class ProductRating extends StatelessWidget {
         color: Theme.of(context).primaryColor,
       );
     }
-    return InkResponse(
-      child: icon,
-      onTap: onChange == null ? null : () => onChange!(index + 1.0),
+    return IconButton(
+      icon: icon,
+      onPressed: onChange == null ? null : () => onChange!(index + 1.0),
+      splashRadius: 2,
     );
   }
 

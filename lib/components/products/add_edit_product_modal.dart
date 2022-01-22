@@ -4,5 +4,5 @@ class AddEditProductUIModal {
   List<ProductsModal> actualProducts = List<ProductsModal>.empty(growable: true);
   ProductsModal? addEditProduct;
   String? appBarTitle;
-  bool isFirstTime = true;
+  bool? isFirstTime = true;
 }

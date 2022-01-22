@@ -3,10 +3,15 @@ import '/util/constants/color_constants.dart';
 import '/util/ui/atl_text.dart';
 
 class ATLButton extends StatefulWidget {
+  final String btnType;
   final String btnText;
+  final String? title;
   final IconData? icon;
+  final Color? btnColor;
+  final BorderRadius? brdrRadius;
   final Function()? onPressed;
-  const ATLButton({Key? key, required this.btnText, this.onPressed, this.icon}) : super(key: key);
+  const ATLButton({Key? key, this.btnType = "DEFAULT", required this.btnText, this.title, this.btnColor, this.onPressed, this.brdrRadius, this.icon})
+      : super(key: key);
 
   @override
   _ATLButtonState createState() => _ATLButtonState();
@@ -15,6 +20,14 @@ class ATLButton extends StatefulWidget {
 class _ATLButtonState extends State<ATLButton> {
   @override
   Widget build(BuildContext context) {
+    if (widget.btnType == "GRADIANT") {
+      return gradiantButton();
+    } else {
+      return defaultButton();
+    }
+  }
+
+  Widget defaultButton() {
     return ElevatedButton(
         onPressed: widget.onPressed,
         style: ButtonStyle(
@@ -68,6 +81,47 @@ class _ATLButtonState extends State<ATLButton> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [Icon(widget.icon), ATLText(txt: widget.btnText)],
                 )),
+    );
+  }
+
+  Widget pickerButton() {
+    return Card(
+      elevation: 0,
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: GestureDetector(
+          onTap: widget.onPressed,
+          child: Stack(children: [
+            Container(
+              // margin: (widget.title != null) ? EdgeInsets.all(AgButtonConstants.margin) : null,
+              decoration: BoxDecoration(border: Border.all(color: Theme.of(context).primaryColor), color: widget.btnColor, borderRadius: widget.brdrRadius),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(child: Center(child: ATLText(txt: widget.btnText))),
+                  if (widget.icon != null)
+                    SizedBox(
+                      width: 30,
+                      child: Icon(
+                        widget.icon,
+                        color: Theme.of(context).primaryColor,
+                        size: 38,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            if (widget.title != null)
+              Positioned(
+                  top: 20,
+                  left: 20,
+                  child: Container(
+                      // decoration: BoxDecoration(color: AgButtonConstants.splashColor),
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: ATLText(txt: widget.title!))),
+          ]),
+        ),
+      ),
     );
   }
 }

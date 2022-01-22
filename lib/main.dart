@@ -14,10 +14,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.orange,
       ),
       routes: Routes.routes,
-      initialRoute: Routes.index,
+      initialRoute: Routes.dashboard,
+      debugShowCheckedModeBanner: false,
     );
   }
 }
