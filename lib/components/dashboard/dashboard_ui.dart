@@ -31,7 +31,8 @@ class _DashboardUIState extends State<DashboardUI> {
     return WillPopScope(
       onWillPop: () async {
         bool response = false;
-        await ATLAlertDialog.getYesOrNoAlertDialog(context, "LogOut", "Do you want to LogOut?", "Yes", "No", (resp) => response = resp);
+        await ATLAlertDialog.getYesOrNoAlertDialog(context, "LogOut",
+            "Do you want to LogOut?", "Yes", "No", (resp) => response = resp);
         return response;
       },
       child: Scaffold(
@@ -52,8 +53,10 @@ class _DashboardUIState extends State<DashboardUI> {
             ? const Center(
                 child: ATLText(txt: "No Products."),
               )
-            : body(),
-        floatingActionButton: (MediaQuery.of(context).size.width >= 800) ? floatingActionBtn() : Container(),
+            : SingleChildScrollView(child: body()),
+        floatingActionButton: (MediaQuery.of(context).size.width >= 800)
+            ? floatingActionBtn()
+            : Container(),
       ),
     );
   }
@@ -64,7 +67,10 @@ class _DashboardUIState extends State<DashboardUI> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Column(
-            children: List.generate(_service.modal.productList.length, (index) => productCard(_service.modal.productList.elementAt(index))),
+            children: List.generate(
+                _service.modal.productList.length,
+                (index) =>
+                    productCard(_service.modal.productList.elementAt(index))),
           ),
         ],
       );
@@ -83,7 +89,10 @@ class _DashboardUIState extends State<DashboardUI> {
               // [
               //   Row(
               //     children:
-              List.generate(_service.modal.productList.length, (index) => productCard(_service.modal.productList.elementAt(index))),
+              List.generate(
+                  _service.modal.productList.length,
+                  (index) =>
+                      productCard(_service.modal.productList.elementAt(index))),
           //   )
           // ],
         ),
@@ -99,7 +108,9 @@ class _DashboardUIState extends State<DashboardUI> {
 
   Widget productCard(ProductsModal product) {
     return SizedBox(
-      width: (MediaQuery.of(context).size.width >= 800) ? 790 : MediaQuery.of(context).size.width - 5,
+      width: (MediaQuery.of(context).size.width >= 600)
+          ? 590
+          : MediaQuery.of(context).size.width - 5,
       child: Card(
         child: ListTile(
           leading: getProductLogo(product.logo, product.name.text),
@@ -108,24 +119,67 @@ class _DashboardUIState extends State<DashboardUI> {
             fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
-          subtitle: Row(
+          subtitle: Column(
             children: [
-              ATLText(
-                txt: (product.rating.toStringAsFixed(1)),
-                color: Colors.black,
+              if (MediaQuery.of(context).size.width > 500)
+              Row(
+                children: [
+                    const Icon(
+                      Icons.account_balance,
+                      size: 20
+                    ),
+                    const SizedBox(width: 5),
+                    ATLText(
+                      txt: ATLDateTimeFormat.getConvertedDate(
+                              "dmy", product.launchDate!) ??
+                          "NA",
+                      color: Colors.black,
+                    ),
+                    const SizedBox(width: 20),
+                  ATLText(
+                    txt: (product.rating.toStringAsFixed(1)),
+                    color: Colors.black,
+                  ),
+                  Icon(
+                    Icons.star,
+                    size: 20,
+                    color: Theme.of(context).primaryColor.withOpacity(0.8),
+                  ),
+                ],
               ),
-              Icon(
-                Icons.star,
-                size: 20,
-                color: Theme.of(context).primaryColor.withOpacity(0.8),
-              ),
-              const SizedBox(width: 20),
-              ATLText(
-                txt: ATLDateTimeFormat.getConvertedDate("dmy", product.launchDate!) ?? "NA",
-                color: Colors.black,
-              ),
-              const SizedBox(width: 5),
-              const Icon(Icons.date_range),
+              if (MediaQuery.of(context).size.width <= 500)
+                Column(
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.account_balance,
+                          size: 20
+                        ),
+                        const SizedBox(width: 5),
+                        ATLText(
+                          txt: ATLDateTimeFormat.getConvertedDate(
+                                  "dmy", product.launchDate!) ??
+                              "NA",
+                          color: Colors.black,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                       ATLText(
+                    txt: (product.rating.toStringAsFixed(1)),
+                    color: Colors.black,
+                  ),
+                  Icon(
+                    Icons.star,
+                    size: 20,
+                    color: Theme.of(context).primaryColor.withOpacity(0.8),
+                  ),
+                      ],
+                    ),
+                  ],
+                )
             ],
           ),
           trailing: SizedBox(
@@ -146,12 +200,19 @@ class _DashboardUIState extends State<DashboardUI> {
                         )),
                     IconButton(
                         onPressed: () async {
-                          ATLAlertDialog.getYesOrNoAlertDialog(context, "Delete ${product.name.text}", "Do you really want to delete", "Yes", "No", (resp) {
+                          ATLAlertDialog.getYesOrNoAlertDialog(
+                              context,
+                              "Delete ${product.name.text}",
+                              "Do you really want to delete",
+                              "Yes",
+                              "No", (resp) {
                             if (resp) {
-                              _service.modal.productList.removeWhere((e) => e.name.text == product.name.text);
+                              _service.modal.productList.removeWhere(
+                                  (e) => e.name.text == product.name.text);
                               if (!mounted) return;
                               setState(() {});
-                              _service.saveProductsList(_service.modal.productList);
+                              _service
+                                  .saveProductsList(_service.modal.productList);
                             }
                           });
                         },
@@ -198,7 +259,9 @@ class _DashboardUIState extends State<DashboardUI> {
           },
           heroTag: const Key("List"),
           child: const Icon(Icons.view_list),
-          backgroundColor: (_service.modal.isListView) ? Theme.of(context).primaryColor : Theme.of(context).primaryColor.withOpacity(0.2),
+          backgroundColor: (_service.modal.isListView)
+              ? Theme.of(context).primaryColor
+              : Theme.of(context).primaryColor.withOpacity(0.2),
         ),
         const SizedBox(width: 10),
         FloatingActionButton(
@@ -209,7 +272,9 @@ class _DashboardUIState extends State<DashboardUI> {
           },
           heroTag: const Key("Grid"),
           child: const Icon(Icons.window),
-          backgroundColor: (!_service.modal.isListView) ? Theme.of(context).primaryColor : Theme.of(context).primaryColor.withOpacity(0.2),
+          backgroundColor: (!_service.modal.isListView)
+              ? Theme.of(context).primaryColor
+              : Theme.of(context).primaryColor.withOpacity(0.2),
         ),
       ],
     );
@@ -231,7 +296,8 @@ class _DashboardUIState extends State<DashboardUI> {
 
   void addProductResponse() async {
     final resp = await Navigator.pushNamed(context, Routes.addEditProduct,
-        arguments: AddEditProductArguments(StringConstants.addProductTitle, _service.modal.productList, null));
+        arguments: AddEditProductArguments(
+            StringConstants.addProductTitle, _service.modal.productList, null));
     _service.modal.isAwaiting = true;
     setState(() {});
     if (resp != null) {
@@ -249,9 +315,13 @@ class _DashboardUIState extends State<DashboardUI> {
 
   void updateProductResponse(ProductsModal product) async {
     List<ProductsModal> list = [];
-    list.addAll(_service.modal.productList.map((e) => _service.getCloneData(e)).toList());
+    list.addAll(_service.modal.productList
+        .map((e) => _service.getCloneData(e))
+        .toList());
     list.removeWhere((element) => element.id == product.id);
-    final resp = await Navigator.pushNamed(context, Routes.addEditProduct, arguments: AddEditProductArguments(StringConstants.editProductTitle, list, product));
+    final resp = await Navigator.pushNamed(context, Routes.addEditProduct,
+        arguments: AddEditProductArguments(
+            StringConstants.editProductTitle, list, product));
 
     _service.modal.isAwaiting = true;
     setState(() {});
@@ -259,8 +329,10 @@ class _DashboardUIState extends State<DashboardUI> {
       AddEditProductArguments arguments = resp as AddEditProductArguments;
       if (!(resp.isAdd ?? false)) {
         ProductsModal editedModal = arguments.addEditProduct!;
-        _service.modal.productList.removeWhere((element) => element.id == editedModal.id);
-        _service.modal.productList.add(_service.getCloneData(arguments.addEditProduct!));
+        _service.modal.productList
+            .removeWhere((element) => element.id == editedModal.id);
+        _service.modal.productList
+            .add(_service.getCloneData(arguments.addEditProduct!));
       }
       await _service.saveProductsList(_service.modal.productList);
       _service.modal.isAwaiting = false;
